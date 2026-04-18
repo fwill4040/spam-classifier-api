@@ -1,0 +1,96 @@
+{
+  "title": "Spam Classifier Monitoring",
+  "uid": "spam-classifier",
+  "version": 1,
+  "refresh": "5s",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Total Predictions",
+      "type": "stat",
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "sum(prediction_total)",
+          "legendFormat": "Total"
+        }
+      ],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Spam Detected Total",
+      "type": "stat",
+      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "sum(spam_detected_total)",
+          "legendFormat": "Spam"
+        }
+      ],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "thresholds": {
+          "steps": [
+            { "color": "green", "value": null },
+            { "color": "red", "value": 1 }
+          ]
+        }
+      }
+    },
+    {
+      "id": 3,
+      "title": "Prediction Rate (per minute)",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "rate(prediction_total[1m]) * 60",
+          "legendFormat": "{{label}}"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Average Prediction Latency (seconds)",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 12, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "rate(prediction_latency_seconds_sum[1m]) / rate(prediction_latency_seconds_count[1m])",
+          "legendFormat": "Avg latency"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Spam Rate (%)",
+      "type": "gauge",
+      "gridPos": { "x": 12, "y": 0, "w": 6, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum(prediction_total{label='spam'}) / sum(prediction_total) * 100",
+          "legendFormat": "Spam %"
+        }
+      ],
+      "options": {
+        "minValue": 0,
+        "maxValue": 100,
+        "thresholds": {
+          "steps": [
+            { "color": "green", "value": null },
+            { "color": "yellow", "value": 30 },
+            { "color": "red", "value": 60 }
+          ]
+        }
+      }
+    }
+  ],
+  "schemaVersion": 38,
+  "time": { "from": "now-15m", "to": "now" },
+  "timepicker": {}
+}
