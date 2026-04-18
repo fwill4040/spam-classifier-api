@@ -36,3 +36,16 @@ def test_empty_text_returns_400():
 def test_root():
     response = client.get("/")
     assert response.status_code == 200
+
+
+def test_metrics_endpoint():
+    response = client.get("/metrics")
+    assert response.status_code == 200
+    assert b"prediction_total" in response.content
+    assert b"prediction_latency_seconds" in response.content
+
+
+def test_metrics_increment_after_prediction():
+    client.post("/predict", json={"text": "WINNER!! Free prize call now 09061701461"})
+    response = client.get("/metrics")
+    assert b"spam_detected_total" in response.content
