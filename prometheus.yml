@@ -5,4 +5,4 @@ global:
 scrape_configs:
   - job_name: "spam-classifier"
     static_configs:
-      - targets: ["api:8000"]
+      - targets: ["192.168.100.34:8000"]
