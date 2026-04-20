@@ -4,8 +4,12 @@ An MLOps portfolio project demonstrating end-to-end deployment of a machine lear
 
 ![CI/CD](https://github.com/fwill4040/spam-classifier-api/actions/workflows/ci-cd.yml/badge.svg)
 
-## Live Monitoring Dashboard
+## Live Demo
+API is live at: https://spam-classifier-api-9cfe.onrender.com
 
+Interactive docs: https://spam-classifier-api-9cfe.onrender.com/docs
+
+## Live Monitoring Dashboard
 ![Grafana Dashboard](grafana-dashboard.png)
 
 ## Stack
@@ -14,6 +18,7 @@ An MLOps portfolio project demonstrating end-to-end deployment of a machine lear
 - **Container**: Docker with multi-layer caching
 - **CI/CD**: GitHub Actions — test → build → push to registry
 - **Monitoring**: Prometheus metrics + Grafana dashboard
+- **Deployment**: Render.com — live public HTTPS endpoint
 
 ## Metrics tracked
 - Total predictions (spam vs ham)
@@ -26,20 +31,12 @@ Every `git push` to main triggers:
 1. Automated tests via pytest
 2. Docker image build
 3. Push to GitHub Container Registry (only if tests pass)
-
-## Run locally
-
-```bash
-docker pull ghcr.io/fwill4040/spam-classifier-api:latest
-docker run -p 8000:8000 ghcr.io/fwill4040/spam-classifier-api:latest
-```
-
-Then open http://localhost:8000/docs for the interactive API explorer.
+4. Auto-deploy to Render
 
 ## Example request
 
 ```bash
-curl -X POST http://localhost:8000/predict \
+curl -X POST https://spam-classifier-api-9cfe.onrender.com/predict \
   -H "Content-Type: application/json" \
   -d '{"text": "You have won a FREE iPhone! Click here to claim!"}'
 ```
@@ -55,9 +52,17 @@ curl -X POST http://localhost:8000/predict \
 }
 ```
 
-## Run tests locally
+## Run locally
 
 ```bash
+git clone https://github.com/fwill4040/spam-classifier-api.git
+cd spam-classifier-api
 pip install -r requirements.txt
+uvicorn app:app --reload
+```
+
+## Run tests
+
+```bash
 pytest tests/ -v
 ```
